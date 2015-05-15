@@ -1,4 +1,5 @@
 <?php
+
 /* qdp
 
    Copyright (C) 2015 Creative Commons
@@ -16,13 +17,12 @@
    You should have received a copy of the GNU Affero General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*/
+ */
 
-require_once('config.php');
+require_once('cas.php');
 
-try {
-    $db = new PDO($db_connect_string, $db_user, $db_password);
-} catch (Exception $e) {
-    error_log($e);
-	die("Unable to connect to database.");
+if (phpCAS::isAuthenticated()) {
+    phpCAS::logoutWithRedirectService($base_url . '/index.php');
+} else {
+    header('location: ./index.php');
 }

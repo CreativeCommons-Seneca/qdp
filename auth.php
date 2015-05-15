@@ -1,18 +1,8 @@
 <?php
 
-/* The List powered by Creative Commons
+/* qdp
 
-   Copyright (C) 2014 Creative Commons
-
-   based on:
-   
-   phpCAS Gateway Example
-
-   https://github.com/Jasig/phpCAS/blob/master/docs/examples/example_gateway.php
-
-   Copyright (c) Joachim Fritschi <jfritschi@freenet.de>
-   Copyright (c) Adam Franco <afranco@middlebury.edu>
-   a file under http://www.apache.org/licenses/LICENSE-2.0
+   Copyright (C) 2015 Creative Commons
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU Affero General Public License as published by
@@ -29,33 +19,14 @@
 
 */
 
-require 'config.php';
-require 'vendor/jasig/phpcas/CAS.php';
+require_once('cas.php');
 
-// Enable debugging
-phpCAS::setDebug();
-
-// Initialize phpCAS
-phpCAS::client(CAS_VERSION_2_0, $cas_host, $cas_port, $cas_context);
-
-// For production use set the CA certificate that is the issuer of the cert
-// on the CAS server and uncomment the line below
-// phpCAS::setCasServerCACert($cas_server_ca_cert_path);
-// For quick testing you can disable SSL validation of the CAS server.
-// THIS SETTING IS NOT RECOMMENDED FOR PRODUCTION.
-// VALIDATING THE CAS SERVER IS CRUCIAL TO THE SECURITY OF THE CAS PROTOCOL!
-
-phpCAS::setNoCasServerValidation();
-
-// check CAS authentication
-
-if (isset($_REQUEST['logout'])) {
-phpCAS::logout();
+if(phpCAS::isAuthenticated()) {
+    // If logged in, great! Get the user so the page can use it
+    $casuid = phpCAS::getUser();
+} else {
+    // Not logged in? Eek! Make sure the user logs in!
+    $casuid = null;
+    header('Location: login.php');
+    die();
 }
-
-if (isset($_REQUEST['login'])) {
-phpCAS::forceAuthentication();
-}
-
-$auth = phpCAS::checkAuthentication();
-?>

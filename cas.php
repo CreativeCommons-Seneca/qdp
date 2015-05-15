@@ -1,4 +1,5 @@
 <?php
+
 /* qdp
 
    Copyright (C) 2015 Creative Commons
@@ -16,13 +17,12 @@
    You should have received a copy of the GNU Affero General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*/
+ */
 
 require_once('config.php');
 
-try {
-    $db = new PDO($db_connect_string, $db_user, $db_password);
-} catch (Exception $e) {
-    error_log($e);
-	die("Unable to connect to database.");
-}
+phpCAS::setDebug();
+phpCAS::client(CAS_VERSION_2_0, $cas_host, $cas_port, $cas_context);
+// phpCAS::setCasServerCACert($cas_server_ca_cert_path);
+// NOT FOR PRODUCTION
+phpCAS::setNoCasServerValidation();
